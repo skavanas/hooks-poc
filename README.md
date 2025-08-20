@@ -1,55 +1,30 @@
-# Git Hooks PoC – Validation pre-commit et commit-msg
+# POC - Spring Boot Project
 
-Ce projet est une preuve de concept (**PoC**) démontrant l’intégration de **hooks Git** personnalisés pour améliorer la qualité du code **avant et pendant les commits**.
+## Gestion des Git Hooks
+
+Ce projet utilise des **Git hooks partagés** pour assurer la qualité du code et l'exécution de vérifications automatiques avant les commits ou les pushes.
+
+### Comment ça fonctionne ?
+
+1. **Clone automatique des hooks partagés**
+
+   - Maven utilise le plugin `exec-maven-plugin` pour cloner le dépôt des hooks partagés depuis GitHub dans le répertoire cible `target/shared-hooks`.
+   - Le clone est effectué uniquement si le répertoire n’existe pas déjà.
+
+2. **Configuration de Git pour utiliser ces hooks**
+
+   - Le plugin `git-build-hook-maven-plugin` configure Git pour utiliser le répertoire cloné comme `core.hooksPath`.
+   - Tous les hooks (pre-commit, pre-push, etc.) définis dans ce dépôt seront automatiquement utilisés par Git.
+
+3. **Exécution automatique**
+
+   - Tout est exécuté automatiquement lors de la phase `initialize` de Maven.
 
 ---
 
-## ✅ Objectifs
+## How to set it up
 
-- Empêcher les commits avec du code non compilable ou mal formaté
-- Forcer un format standard pour les messages de commit
-- Détecter les erreurs courantes le plus tôt possible
-
----
-
-## 🧩 Hooks utilisés
-
-### `pre-commit`
-Ce hook s'exécute **avant chaque commit** et utilise plusieurs outils :
-
-| Outil Maven           | Rôle                                                                 |
-|-----------------------|----------------------------------------------------------------------|
-| `mvn compile`         | Vérifie que le code compile correctement                             |
-| `mvn checkstyle:check`| Applique les règles de style de code définies (Checkstyle)           |
-| `mvn formatter:format`| Formate automatiquement le code Java (Formatter Maven Plugin)        |
-| `mvn test`            | Exécute les tests unitaires                                          |
-| `mvn spotbugs:spotbugs`| Analyse statique pour détecter des bugs potentiels (SpotBugs)      |
-
-### `commit-msg`
-Ce hook s’assure que les **messages de commit** respectent un format prédéfini basé sur un **ID de ticket**.  
-Exemple attendu :  
-
-
-## 🔗 Configuration du sous-module Git
-
-Les hooks sont gérés dans un **repository Git séparé** et liés via un **Git submodule**.
-
-### Initialisation
-
-Si vous clonez ce dépôt, exécutez :
+Pour configurer les hooks sur votre machine, il suffit d’exécuter la commande suivante à la racine du projet :
 
 ```bash
-git clone --recurse-submodules <url-du-repo>
-```
-
-Ou si vous avez déjà cloné sans les sous-modules :
-
-```bash
-git submodule update --init --recursive
-```
-Lien avec les hooks Git
-Le projet utilise la configuration suivante pour pointer vers les hooks centralisés :
-```bash
-git config core.hooksPath .githooks
-```
-
+mvn initialize
