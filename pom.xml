@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>POC</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>POC</name>
 	<description>Demo project for Spring Boot</description>
-	<url/>
+	<url />
 	<licenses>
-		<license/>
+		<license />
 	</licenses>
 	<developers>
-		<developer/>
+		<developer />
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
 	</scm>
 
 	<properties>
@@ -60,50 +61,52 @@
 
 	<build>
 		<plugins>
-		<!-- 1) Clone shared hooks into target directory -->
-		<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>exec-maven-plugin</artifactId>
-			<version>3.1.0</version>
-			<executions>
-				<execution>
-					<id>fetch-shared-hooks</id>
-					<phase>initialize</phase>
-					<goals>
-						<goal>exec</goal>
-					</goals>
-					<configuration>
-						<executable>git</executable>
-						<arguments>
-							<argument>clone</argument>
-							<argument>--depth=1</argument>
-							<argument>https://github.com/skavanas/Git-Hooks.git</argument>
-							<argument>${project.build.directory}/shared-hooks</argument>
-						</arguments>
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
+			<!-- 1) Clone shared hooks into target directory -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>fetch-shared-hooks</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>cmd</executable>
+							<arguments>
+								<argument>/c</argument>
+								<argument>
+									if not exist ${project.build.directory}\shared-hooks\.git git clone --depth=1 https://github.com/skavanas/Git-Hooks.git ${project.build.directory}\shared-hooks
+								</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-		<!-- 2) Instruct Git to use the fetched hooks directory -->
-		<plugin>
-			<groupId>com.rudikershaw.gitbuildhook</groupId>
-			<artifactId>git-build-hook-maven-plugin</artifactId>
-			<version>3.5.0</version>
-			<configuration>
-				<gitConfig>
-					<core.hooksPath>${project.build.directory}/shared-hooks/</core.hooksPath>
-				</gitConfig>
-			</configuration>
-			<executions>
-				<execution>
-					<goals>
-						<goal>configure</goal>
-					</goals>
-					<phase>initialize</phase>
-				</execution>
-			</executions>
-		</plugin>
+
+			<!-- 2) Instruct Git to use the fetched hooks directory -->
+			<plugin>
+				<groupId>com.rudikershaw.gitbuildhook</groupId>
+				<artifactId>git-build-hook-maven-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<gitConfig>
+						<core.hooksPath>${project.build.directory}/shared-hooks</core.hooksPath>
+					</gitConfig>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>configure</goal>
+						</goals>
+						<phase>initialize</phase>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
