@@ -92,7 +92,7 @@
 			<version>3.5.0</version>
 			<configuration>
 				<gitConfig>
-					<core.hooksPath>${project.build.directory}/shared-hooks/hooks</core.hooksPath>
+					<core.hooksPath>${project.build.directory}/shared-hooks/</core.hooksPath>
 				</gitConfig>
 			</configuration>
 			<executions>
