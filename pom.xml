@@ -60,6 +60,50 @@
 
 	<build>
 		<plugins>
+		<!-- 1) Clone shared hooks into target directory -->
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>3.1.0</version>
+			<executions>
+				<execution>
+					<id>fetch-shared-hooks</id>
+					<phase>initialize</phase>
+					<goals>
+						<goal>exec</goal>
+					</goals>
+					<configuration>
+						<executable>git</executable>
+						<arguments>
+							<argument>clone</argument>
+							<argument>--depth=1</argument>
+							<argument>https://github.com/skavanas/Git-Hooks.git</argument>
+							<argument>${project.build.directory}/shared-hooks</argument>
+						</arguments>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
+		<!-- 2) Instruct Git to use the fetched hooks directory -->
+		<plugin>
+			<groupId>com.rudikershaw.gitbuildhook</groupId>
+			<artifactId>git-build-hook-maven-plugin</artifactId>
+			<version>3.5.0</version>
+			<configuration>
+				<gitConfig>
+					<core.hooksPath>${project.build.directory}/shared-hooks/hooks</core.hooksPath>
+				</gitConfig>
+			</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>configure</goal>
+					</goals>
+					<phase>initialize</phase>
+				</execution>
+			</executions>
+		</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
